@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"github.com/MeguMan/MatapacChallenge/internal/storage"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"log"
 	"sort"
+	"time"
 )
 
 func (s *service) Handle(ctx context.Context) error {
@@ -73,12 +75,15 @@ func (s *service) addUser(ctx context.Context, update tgbotapi.Update) {
 }
 
 func (s *service) top(ctx context.Context, update tgbotapi.Update) {
+	start := time.Now()
 	users, err := s.storageService.GetUsersSolAccounts(ctx)
 	if err != nil {
 		fmt.Println(err)
 		s.sendMsg(update, internalErrorText)
 		return
 	}
+	elapsed := time.Since(start)
+	log.Printf("GetUsersSolAccounts took %s", elapsed)
 
 	mpUserNameByPublicKey := make(map[string]string, len(users))
 	publicKeys := make([]string, 0, len(users))
@@ -94,6 +99,9 @@ func (s *service) top(ctx context.Context, update tgbotapi.Update) {
 		return
 	}
 
+	elapsed = time.Since(start)
+	log.Printf("GetAccountsBalance took %s", elapsed)
+
 	sort.Slice(accounts, func(i, j int) bool {
 		return accounts[i].Sol < accounts[j].Sol
 	})
@@ -103,6 +111,8 @@ func (s *service) top(ctx context.Context, update tgbotapi.Update) {
 		textMsg += fmt.Sprintf("%s - %f\n", mpUserNameByPublicKey[account.PublicKey], account.Sol)
 	}
 
+	elapsed = time.Since(start)
+	log.Printf("FULL took %s", elapsed)
 	s.sendMsg(update, textMsg)
 }
 
