@@ -105,7 +105,7 @@ func (s *service) top(ctx context.Context, update tgbotapi.Update) {
 	}
 
 	sort.Slice(accounts, func(i, j int) bool {
-		return accounts[i].Sol < accounts[j].Sol
+		return accounts[i].Sol > accounts[j].Sol
 	})
 
 	textMsg := ""
