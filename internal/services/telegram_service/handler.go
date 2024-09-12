@@ -7,6 +7,7 @@ import (
 	"github.com/MeguMan/MatapacChallenge/internal/storage"
 	"github.com/gagliardetto/solana-go"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"math"
 	"sort"
 )
 
@@ -42,8 +43,14 @@ func (s *service) start(update tgbotapi.Update) {
 }
 
 func (s *service) add(update tgbotapi.Update) {
-	msg := tgbotapi.NewEditMessageText(update.Message.Chat.ID, update.Message.MessageID, addText)
-	if _, err := s.bot.Send(msg); err != nil {
+	msg, err := s.bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, addText))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	msgEdit := tgbotapi.NewEditMessageText(update.Message.Chat.ID, msg.MessageID, "lol")
+	if _, err := s.bot.Send(msgEdit); err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -106,7 +113,7 @@ func (s *service) top(ctx context.Context, update tgbotapi.Update) {
 
 	textMsg := ""
 	for i, account := range accounts {
-		textMsg += fmt.Sprintf("%d. %s - %f\n", i+1, mpUserNameByPublicKey[account.PublicKey], account.Sol)
+		textMsg += fmt.Sprintf("%d. %s - %f\n", i+1, mpUserNameByPublicKey[account.PublicKey], math.Round(account.Sol*100)/100)
 	}
 
 	s.sendMsg(update, textMsg)

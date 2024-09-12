@@ -7,7 +7,6 @@ import (
 	"errors"
 	"io"
 	"log"
-	"math"
 	"net/http"
 	"time"
 )
@@ -84,7 +83,7 @@ func (s *service) GetAccountsBalance(ctx context.Context, publicKeys []string) (
 	for i, key := range publicKeys {
 		result = append(result, SolAccount{
 			PublicKey: key,
-			Sol:       math.Round(float64(decodedResponse.Result.Value[i].Lamports)/1000000000*100) / 100,
+			Sol:       float64(decodedResponse.Result.Value[i].Lamports) / 1000000000,
 		})
 	}
 
