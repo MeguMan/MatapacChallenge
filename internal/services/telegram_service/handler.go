@@ -8,6 +8,7 @@ import (
 	"github.com/gagliardetto/solana-go"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"math"
+	"os"
 	"sort"
 )
 
@@ -72,6 +73,23 @@ func (s *service) addUser(ctx context.Context, update tgbotapi.Update) {
 		} else {
 			s.sendMsg(update, internalErrorText)
 		}
+		return
+	}
+
+	f, err := os.OpenFile("../../../users.txt", os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	_, err = fmt.Fprintln(f, fmt.Sprintf("%d-%s-%s", update.Message.From.ID, update.Message.From.UserName, publicKey.String()))
+	if err != nil {
+		fmt.Println(err)
+		f.Close()
+		return
+	}
+	err = f.Close()
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
