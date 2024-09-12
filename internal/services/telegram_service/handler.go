@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/MeguMan/MatapacChallenge/internal/storage"
+	"github.com/gagliardetto/solana-go"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"sort"
 )
@@ -49,10 +50,15 @@ func (s *service) add(update tgbotapi.Update) {
 }
 
 func (s *service) addUser(ctx context.Context, update tgbotapi.Update) {
-	err := s.storageService.CreateUser(ctx, storage.User{
+	publicKey, err := solana.PublicKeyFromBase58(update.Message.Text)
+	if err != nil {
+		s.sendMsg(update, invalidPublicKeyErrText)
+	}
+
+	err = s.storageService.CreateUser(ctx, storage.User{
 		TgID:         update.Message.From.ID,
 		TgUsername:   update.Message.From.UserName,
-		SolPublicKey: update.Message.Text,
+		SolPublicKey: publicKey.String(),
 		TgChatID:     update.Message.Chat.ID,
 	})
 	if err != nil {
@@ -99,8 +105,8 @@ func (s *service) top(ctx context.Context, update tgbotapi.Update) {
 	})
 
 	textMsg := ""
-	for _, account := range accounts {
-		textMsg += fmt.Sprintf("%s - %f\n", mpUserNameByPublicKey[account.PublicKey], account.Sol)
+	for i, account := range accounts {
+		textMsg += fmt.Sprintf("%d. %s - %f\n", i, mpUserNameByPublicKey[account.PublicKey], account.Sol)
 	}
 
 	s.sendMsg(update, textMsg)
