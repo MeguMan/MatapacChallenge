@@ -11,9 +11,8 @@ func (s *Storage) CreateUser(ctx context.Context, user User) error {
 			"tg_id",
 			"tg_username",
 			"sol_public_key",
-			"tg_chat_id",
 		).
-		Values(user.TgID, user.TgUsername, user.SolPublicKey, user.TgChatID).
+		Values(user.TgID, user.TgUsername, user.SolPublicKey).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {

@@ -53,13 +53,13 @@ func (s *service) addUser(ctx context.Context, update tgbotapi.Update) {
 	publicKey, err := solana.PublicKeyFromBase58(update.Message.Text)
 	if err != nil {
 		s.sendMsg(update, invalidPublicKeyErrText)
+		return
 	}
 
 	err = s.storageService.CreateUser(ctx, storage.User{
 		TgID:         update.Message.From.ID,
 		TgUsername:   update.Message.From.UserName,
 		SolPublicKey: publicKey.String(),
-		TgChatID:     update.Message.Chat.ID,
 	})
 	if err != nil {
 		fmt.Println(err)

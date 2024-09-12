@@ -6,7 +6,7 @@ import (
 )
 
 func (s *Storage) GetUsersSolAccounts(ctx context.Context) ([]User, error) {
-	query, params, err := sq.Select("tg_id", "tg_username", "sol_public_key", "tg_chat_id").
+	query, params, err := sq.Select("tg_id", "tg_username", "sol_public_key").
 		From(usersTableName).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
