@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"log"
 	"math"
 	"net/http"
+	"time"
 )
 
 type getMultipleAccountsRequestBody struct {
@@ -26,6 +28,8 @@ type getMultipleAccountsResponseBody struct {
 }
 
 func (s *service) GetAccountsBalance(ctx context.Context, publicKeys []string) ([]SolAccount, error) {
+	start := time.Now()
+
 	bodyBytes, err := json.Marshal(getMultipleAccountsRequestBody{
 		ID:      1,
 		JsonRpc: "2.0",
@@ -35,6 +39,8 @@ func (s *service) GetAccountsBalance(ctx context.Context, publicKeys []string) (
 	if err != nil {
 		return nil, err
 	}
+	elapsed := time.Since(start)
+	log.Printf("bodyReady took %s", elapsed)
 
 	client := &http.Client{}
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.chainstackURL, bytes.NewBuffer(bodyBytes))
@@ -42,6 +48,8 @@ func (s *service) GetAccountsBalance(ctx context.Context, publicKeys []string) (
 		return nil, err
 	}
 	req.Header.Add("Content-Type", "application/json")
+	elapsed = time.Since(start)
+	log.Printf("req took %s", elapsed)
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -50,6 +58,9 @@ func (s *service) GetAccountsBalance(ctx context.Context, publicKeys []string) (
 	defer func() {
 		_ = resp.Body.Close()
 	}()
+
+	elapsed = time.Since(start)
+	log.Printf("resp arrived %s", elapsed)
 
 	bodyBytes, err = io.ReadAll(resp.Body)
 	if err != nil {
@@ -62,6 +73,9 @@ func (s *service) GetAccountsBalance(ctx context.Context, publicKeys []string) (
 		return nil, err
 	}
 
+	elapsed = time.Since(start)
+	log.Printf("resp decoded %s", elapsed)
+
 	result := make([]SolAccount, 0, len(publicKeys))
 	if len(decodedResponse.Result.Value) != len(publicKeys) {
 		return nil, errors.New("invalid response length")
@@ -73,6 +87,9 @@ func (s *service) GetAccountsBalance(ctx context.Context, publicKeys []string) (
 			Sol:       math.Round(float64(decodedResponse.Result.Value[i].Lamports)/1000000000*100) / 100,
 		})
 	}
+
+	elapsed = time.Since(start)
+	log.Printf("done %s", elapsed)
 
 	return result, nil
 }
