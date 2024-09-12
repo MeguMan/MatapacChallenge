@@ -43,14 +43,9 @@ func (s *service) start(update tgbotapi.Update) {
 }
 
 func (s *service) add(update tgbotapi.Update) {
-	msg, err := s.bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, addText))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	msgEdit := tgbotapi.NewEditMessageText(update.Message.Chat.ID, msg.MessageID, "lol")
-	if _, err := s.bot.Send(msgEdit); err != nil {
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, addText)
+	msg.ReplyMarkup = tgbotapi.ForceReply{}
+	if _, err := s.bot.Send(msg); err != nil {
 		fmt.Println(err)
 		return
 	}
