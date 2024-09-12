@@ -106,7 +106,7 @@ func (s *service) top(ctx context.Context, update tgbotapi.Update) {
 
 	textMsg := ""
 	for i, account := range accounts {
-		textMsg += fmt.Sprintf("%d. %s - %f\n", i, mpUserNameByPublicKey[account.PublicKey], account.Sol)
+		textMsg += fmt.Sprintf("%d. %s - %f\n", i+1, mpUserNameByPublicKey[account.PublicKey], account.Sol)
 	}
 
 	s.sendMsg(update, textMsg)
