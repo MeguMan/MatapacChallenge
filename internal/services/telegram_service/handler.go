@@ -75,13 +75,13 @@ func (s *service) addUser(ctx context.Context, update tgbotapi.Update) {
 		return
 	}
 
-	msg := tgbotapi.NewMessage(487861234, fmt.Sprintf("%d-%s-%s registered", update.Message.From.ID, update.Message.From.UserName, publicKey.String()))
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, addSuccessText)
 	if _, err := s.bot.Send(msg); err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	msg = tgbotapi.NewMessage(update.Message.Chat.ID, addSuccessText)
+	msg = tgbotapi.NewMessage(487861234, fmt.Sprintf("%d-%s-%s registered", update.Message.From.ID, update.Message.From.UserName, publicKey.String()))
 	if _, err := s.bot.Send(msg); err != nil {
 		fmt.Println(err)
 		return
