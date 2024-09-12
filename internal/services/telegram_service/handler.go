@@ -76,7 +76,7 @@ func (s *service) addUser(ctx context.Context, update tgbotapi.Update) {
 		return
 	}
 
-	f, err := os.OpenFile("../../../users.txt", os.O_APPEND|os.O_WRONLY, 0644)
+	f, err := os.OpenFile("./../../../users.txt", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		fmt.Println(err)
 		return
