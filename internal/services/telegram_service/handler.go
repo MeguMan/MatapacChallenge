@@ -44,7 +44,9 @@ func (s *service) start(update tgbotapi.Update) {
 
 func (s *service) add(update tgbotapi.Update) {
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, addText)
-	msg.ReplyMarkup = tgbotapi.ForceReply{}
+	msg.ReplyMarkup = tgbotapi.ForceReply{
+		ForceReply: true,
+	}
 	if _, err := s.bot.Send(msg); err != nil {
 		fmt.Println(err)
 		return
