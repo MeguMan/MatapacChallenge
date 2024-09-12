@@ -1,0 +1,23 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd MatapacChallenge
+            git pull
+            docker compose up -d --no-deps --build
+            docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
