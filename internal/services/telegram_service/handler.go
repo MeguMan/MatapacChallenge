@@ -56,6 +56,7 @@ func (s *service) addUser(ctx context.Context, update tgbotapi.Update) {
 		TgChatID:     update.Message.Chat.ID,
 	})
 	if err != nil {
+		fmt.Println(err)
 		if errors.Is(err, storage.ErrUniqueKeyViolation) {
 			s.sendMsg(update, userAlreadyExistsErrText)
 		} else {
@@ -74,6 +75,7 @@ func (s *service) addUser(ctx context.Context, update tgbotapi.Update) {
 func (s *service) top(ctx context.Context, update tgbotapi.Update) {
 	users, err := s.storageService.GetUsersSolAccounts(ctx)
 	if err != nil {
+		fmt.Println(err)
 		s.sendMsg(update, internalErrorText)
 		return
 	}
@@ -87,6 +89,7 @@ func (s *service) top(ctx context.Context, update tgbotapi.Update) {
 
 	accounts, err := s.chainstackService.GetAccountsBalance(ctx, publicKeys)
 	if err != nil {
+		fmt.Println(err)
 		s.sendMsg(update, internalErrorText)
 		return
 	}
