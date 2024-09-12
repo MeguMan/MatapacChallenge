@@ -103,7 +103,7 @@ func (s *service) top(ctx context.Context, update tgbotapi.Update) {
 		textMsg += fmt.Sprintf("%s - %f\n", mpUserNameByPublicKey[account.PublicKey], account.Sol)
 	}
 
-	s.sendMsg(update, addSuccessText)
+	s.sendMsg(update, textMsg)
 }
 
 func (s *service) sendMsg(update tgbotapi.Update, msgText string) {
