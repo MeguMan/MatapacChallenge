@@ -9,6 +9,7 @@ import (
 type storageService interface {
 	GetUsersSolAccounts(ctx context.Context) ([]storage.User, error)
 	CreateUser(ctx context.Context, user storage.User) error
+	UpdateUser(ctx context.Context, user storage.User) error
 }
 
 type chainstackService interface {
