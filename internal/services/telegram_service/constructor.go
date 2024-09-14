@@ -3,6 +3,7 @@ package telegram_service
 import (
 	"context"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"sync"
 )
 
 type Service interface {
@@ -14,9 +15,11 @@ type service struct {
 	storageService    storageService
 	updates           tgbotapi.UpdatesChannel
 	bot               *tgbotapi.BotAPI
+	topMsg            string
+	mutex             sync.RWMutex
 }
 
-func New(chainstackService chainstackService, storageService storageService, telegramBotToken string) (Service, error) {
+func New(ctx context.Context, chainstackService chainstackService, storageService storageService, telegramBotToken string) (Service, error) {
 	bot, err := tgbotapi.NewBotAPI(telegramBotToken)
 	if err != nil {
 		return nil, err
@@ -31,10 +34,18 @@ func New(chainstackService chainstackService, storageService storageService, tel
 		return nil, err
 	}
 
-	return &service{
+	s := &service{
 		chainstackService: chainstackService,
 		storageService:    storageService,
 		updates:           updates,
 		bot:               bot,
-	}, nil
+		mutex:             sync.RWMutex{},
+	}
+
+	err = s.syncUsersBalanceTicker(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return s, nil
 }

@@ -35,7 +35,7 @@ func main() {
 		log.Fatalf("Failed to create storage: %v", err)
 	}
 
-	telegramService, err := telegram_service.New(chainstackService, storageRepo, os.Getenv("TELEGRAM_BOT_TOKEN"))
+	telegramService, err := telegram_service.New(ctx, chainstackService, storageRepo, os.Getenv("TELEGRAM_BOT_TOKEN"))
 	if err != nil {
 		log.Fatalf("Failed to create telegram service: %v", err)
 	}
