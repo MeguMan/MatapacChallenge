@@ -19,14 +19,14 @@ func (s *service) Handle(ctx context.Context) error {
 				go s.start(update)
 			case update.Message.Command() == "add":
 				go s.add(update)
-			//case update.Message.Command() == "update":
-			//	go s.update(update)
+			case update.Message.Command() == "update":
+				go s.update(update)
 			case update.Message.Command() == "top":
 				go s.top(update)
 			case update.Message.ReplyToMessage != nil && update.Message.ReplyToMessage.Text == addText:
 				go s.addUser(ctx, update)
-			//case update.Message.ReplyToMessage != nil && update.Message.ReplyToMessage.Text == updateText:
-			//	go s.updateUser(ctx, update)
+			case update.Message.ReplyToMessage != nil && update.Message.ReplyToMessage.Text == updateText:
+				go s.updateUser(ctx, update)
 			default:
 				continue
 			}
