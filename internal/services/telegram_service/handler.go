@@ -69,7 +69,7 @@ func (s *service) update(update tgbotapi.Update) {
 func (s *service) addUser(ctx context.Context, update tgbotapi.Update) {
 	publicKey, err := solana.PublicKeyFromBase58(update.Message.Text)
 	if err != nil {
-		s.sendMsg(update, invalidPublicKeyErrText)
+		s.sendMsg(update, invalidPublicKeyErrText, "")
 		return
 	}
 
@@ -81,9 +81,9 @@ func (s *service) addUser(ctx context.Context, update tgbotapi.Update) {
 	if err != nil {
 		fmt.Println(err)
 		if errors.Is(err, storage.ErrUniqueKeyViolation) {
-			s.sendMsg(update, userAlreadyExistsErrText)
+			s.sendMsg(update, userAlreadyExistsErrText, "")
 		} else {
-			s.sendMsg(update, internalErrorText)
+			s.sendMsg(update, internalErrorText, "")
 		}
 		return
 	}
@@ -104,7 +104,7 @@ func (s *service) addUser(ctx context.Context, update tgbotapi.Update) {
 func (s *service) updateUser(ctx context.Context, update tgbotapi.Update) {
 	publicKey, err := solana.PublicKeyFromBase58(update.Message.Text)
 	if err != nil {
-		s.sendMsg(update, invalidPublicKeyErrText)
+		s.sendMsg(update, invalidPublicKeyErrText, "")
 		return
 	}
 
@@ -115,9 +115,9 @@ func (s *service) updateUser(ctx context.Context, update tgbotapi.Update) {
 	if err != nil {
 		fmt.Println(err)
 		if errors.Is(err, storage.ErrUniqueKeyViolation) {
-			s.sendMsg(update, userAlreadyExistsErrText)
+			s.sendMsg(update, userAlreadyExistsErrText, "")
 		} else {
-			s.sendMsg(update, internalErrorText)
+			s.sendMsg(update, internalErrorText, "")
 		}
 		return
 	}
@@ -136,11 +136,16 @@ func (s *service) updateUser(ctx context.Context, update tgbotapi.Update) {
 }
 
 func (s *service) top(update tgbotapi.Update) {
-	s.sendMsg(update, s.getTopMsg())
+	s.sendMsg(update, s.getTopMsg(), tgbotapi.ModeHTML)
 }
 
-func (s *service) sendMsg(update tgbotapi.Update, msgText string) {
+func (s *service) sendMsg(update tgbotapi.Update, msgText string, parseMode string) {
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, msgText)
+
+	if parseMode != "" {
+		msg.ParseMode = parseMode
+	}
+
 	if _, err := s.bot.Send(msg); err != nil {
 		fmt.Println(err)
 		return
