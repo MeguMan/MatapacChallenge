@@ -24,7 +24,7 @@ func New(ctx context.Context, chainstackService chainstackService, storageServic
 	if err != nil {
 		return nil, err
 	}
-	bot.Debug = true
+	//bot.Debug = true
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
