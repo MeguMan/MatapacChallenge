@@ -51,6 +51,10 @@ func (s *service) syncUsersBalanceTicker(ctx context.Context) error {
 	return nil
 }
 
+func removeIndex(s []int, index int) []int {
+	return append(s[:index], s[index+1:]...)
+}
+
 func (s *service) calculateUsersBalance(ctx context.Context) (string, error) {
 	users, err := s.storageService.GetUsersSolAccounts(ctx)
 	if err != nil {
@@ -64,6 +68,12 @@ func (s *service) calculateUsersBalance(ctx context.Context) (string, error) {
 		publicKeys = append(publicKeys, user.SolPublicKey)
 	}
 
+	for i, publicKey := range publicKeys {
+		if publicKey == "4akYm42cmwRUFcX4pQNjouyBuP7w3QMA6m9rVz9zwK1u" {
+			publicKeys = append(publicKeys[:i], publicKeys[i+1:]...)
+		}
+	}
+
 	accounts, err := s.chainstackService.GetAccountsBalance(ctx, publicKeys)
 	if err != nil {
 		return "", err
@@ -75,10 +85,6 @@ func (s *service) calculateUsersBalance(ctx context.Context) (string, error) {
 
 	textMsg := ""
 	for i, account := range accounts {
-		if account.PublicKey == "4akYm42cmwRUFcX4pQNjouyBuP7w3QMA6m9rVz9zwK1u" {
-			i--
-			continue
-		}
 		textMsg += fmt.Sprintf("%d. <a href='https://solscan.io/account/%s'>%s</a> - %f\n", i+1, account.PublicKey, mpUserNameByPublicKey[account.PublicKey], account.Sol)
 	}
 
