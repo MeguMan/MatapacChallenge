@@ -76,6 +76,7 @@ func (s *service) calculateUsersBalance(ctx context.Context) (string, error) {
 	textMsg := ""
 	for i, account := range accounts {
 		if account.PublicKey == "4akYm42cmwRUFcX4pQNjouyBuP7w3QMA6m9rVz9zwK1u" {
+			i--
 			continue
 		}
 		textMsg += fmt.Sprintf("%d. <a href='https://solscan.io/account/%s'>%s</a> - %f\n", i+1, account.PublicKey, mpUserNameByPublicKey[account.PublicKey], account.Sol)
