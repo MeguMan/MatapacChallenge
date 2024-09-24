@@ -36,4 +36,10 @@ VALUES
     (5975937856,'','2xonuQMAHzwPM7LJaMnpSBHhPQgLpf52CqjGwp7shMeV'),
     (351469103,'yououma','EPECBC5wrxRknsrxmDnBJ3fv9LR3wAnvx6kYPa92nU5r'),
     (213506548,'KARM404','o8ot7WmSZa1VU5EKxpHn62XpPGenLaFypS3FV5N4xJG'),
-    (1324194431,'morsxdd','CwGoM2Fff6V5Czs8QaruCfewS2ChGH5ubpUoQGYsDswF');
+    (1324194431,'morsxdd','CwGoM2Fff6V5Czs8QaruCfewS2ChGH5ubpUoQGYsDswF'),
+    (487861234,'Plifin','FYp4buqQDLVwVKuA4AiyNDuCDPKHmrSaUpBELuNSNTE6'),
+    (6016489618,'l3v3v3','4akYm42cmwRUFcX4pQNjouyBuP7w3QMA6m9rVz9zwK1u'),
+    (5313648988,'xmonk1338','7hsuiFu2Q2EQhNv32FEjX46Nh3hHBW25F1ko8F5My8YK'),
+    (431049713,'yyuyuuyuyuyy','9e4uKAUD8Cp7yc8PEvv3Uj5xr5PCuvaJKoVGrLwZBgjv'),
+    (977735307,'Degennich','A5jBAkMdZZtCBCCKXjQRjMaTkQxi1coNya5Ko4aWZf2L'),
+    (5815923671,'Frumosus','CAy83N3eeEMmaUJ9cVuZSg3KiqD6KV1pTuc1wtDEXH2o');
